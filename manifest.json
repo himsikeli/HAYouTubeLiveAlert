@@ -1,8 +1,8 @@
 {
-    "domain": "youtube",
+    "domain": "hayoutubelivealert",
     "name": "HAYouTubeLiveAlert Sensor",
     "documentation": "https://github.com/Ikeli0320/HAYouTubeLiveAlert",
     "requirements": ["google-api-python-client==2.30.0"],
     "dependencies": [],
-    "codeowners": ["@ikeli0320"]
+    "codeowners": ["@Ikeli0320"]
   }
