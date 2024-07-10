@@ -1,17 +1,25 @@
 import logging
 import datetime
 from googleapiclient.discovery import build
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import CONF_API_KEY
+from homeassistant.helpers.entity import Entity
+import voluptuous as vol
+import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
 
-DOMAIN = 'youtube'
+DOMAIN = 'hayoutubelivealert'
 SCAN_INTERVAL = datetime.timedelta(minutes=5)
 
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
+    vol.Required(CONF_API_KEY): cv.string,
+    vol.Required('channel_id'): cv.string,
+})
+
 def setup_platform(hass, config, add_entities, discovery_info=None):
-    api_key = config.get(CONF_API_KEY)
-    channel_id = config.get('channel_id')
+    api_key = config[CONF_API_KEY]
+    channel_id = config['channel_id']
 
     if not api_key or not channel_id:
         _LOGGER.error("You must provide an API key and channel ID")
@@ -19,7 +27,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
     add_entities([YouTubeSensor(api_key, channel_id)], True)
 
-class YouTubeSensor(SensorEntity):
+class YouTubeSensor(Entity):
     def __init__(self, api_key, channel_id):
         self._state = None
         self._api_key = api_key

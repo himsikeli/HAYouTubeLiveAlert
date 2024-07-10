@@ -32,89 +32,11 @@ HAYouTubeLiveAlert 是一個 Home Assistant 自訂元件，當您關注的 YouTu
 #### 使用 HACS 安裝
 
 1. 打開 Home Assistant，進入 HACS（Home Assistant Community Store）。
-2. 點擊 “Integrations”。
-3. 點擊右上角的 “+” 按鈕，並搜索 `HAYouTubeLiveAlert`。
-4. 選擇 `HAYouTubeLiveAlert` 並點擊 “Install”。
-
-### 編寫文件內容
-
-#### `__init__.py`
-
-```python
-# 這個文件可以保持空白
-```
-
-#### `manifest.json`
-
-```json
-{
-  "domain": "hayoutubelivealert",
-  "name": "HAYouTubeLiveAlert Sensor",
-  "documentation": "https://github.com/Ikeli0320/HAYouTubeLiveAlert",
-  "requirements": ["google-api-python-client==2.30.0"],
-  "dependencies": [],
-  "codeowners": ["@Ikeli0320"]
-}
-```
-
-#### `sensor.py`
-
-```python
-import logging
-import datetime
-from googleapiclient.discovery import build
-from homeassistant.components.sensor import SensorEntity
-from homeassistant.const import CONF_API_KEY
-
-_LOGGER = logging.getLogger(__name__)
-
-DOMAIN = 'hayoutubelivealert'
-SCAN_INTERVAL = datetime.timedelta(minutes=5)
-
-def setup_platform(hass, config, add_entities, discovery_info=None):
-    api_key = config.get(CONF_API_KEY)
-    channel_id = config.get('channel_id')
-
-    if not api_key or not channel_id:
-        _LOGGER.error("You must provide an API key and channel ID")
-        return False
-
-    add_entities([YouTubeSensor(api_key, channel_id)], True)
-
-class YouTubeSensor(SensorEntity):
-    def __init__(self, api_key, channel_id):
-        self._state = None
-        self._api_key = api_key
-        self._channel_id = channel_id
-        self._name = "YouTube Live Stream"
-        self._live_url = None
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def state(self):
-        return self._state
-
-    @property
-    def extra_state_attributes(self):
-        return {
-            "live_url": self._live_url
-        }
-
-    def update(self):
-        youtube = build('youtube', 'v3', developerKey=self._api_key)
-        request = youtube.search().list(part='snippet', channelId=self._channel_id, type='video', eventType='live')
-        response = request.execute()
-
-        if response['items']:
-            self._state = "Live"
-            self._live_url = f"https://www.youtube.com/watch?v={response['items'][0]['id']['videoId']}"
-        else:
-            self._state = "Not Live"
-            self._live_url = None
-```
+2. 選擇 “Custom repositories”。
+3. Repository輸入 https://github.com/Ikeli0320/HAYouTubeLiveAlert 。
+4. Category選擇 integration 。
+5. 搜索 `HAYouTubeLiveAlert`。
+6. 選擇 `HAYouTubeLiveAlert` 並點擊 “Download”。
 
 ### 配置 Home Assistant
 
