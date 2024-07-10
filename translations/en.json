@@ -1,0 +1,11 @@
+{
+    "title": "HAYouTubeLiveAlert",
+    "config": {
+      "step": {
+        "user": {
+          "title": "HAYouTubeLiveAlert Configuration",
+          "description": "Set up the HAYouTubeLiveAlert integration."
+        }
+      }
+    }
+  }
