@@ -5,5 +5,6 @@
   "requirements": ["google-api-python-client==2.30.0"],
   "dependencies": [],
   "codeowners": ["@Ikeli0320"],
-  "translation_key": "hayoutubelivealert"
+  "translation_key": "hayoutubelivealert",
+  "version": "0.0.1"  
 }
