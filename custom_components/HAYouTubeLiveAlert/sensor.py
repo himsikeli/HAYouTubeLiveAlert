@@ -10,7 +10,7 @@ import homeassistant.helpers.config_validation as cv
 _LOGGER = logging.getLogger(__name__)
 
 DOMAIN = 'hayoutubelivealert'
-SCAN_INTERVAL = datetime.timedelta(minutes=5)
+SCAN_INTERVAL = datetime.timedelta(minutes=30)  # 將更新間隔設為30分鐘
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_KEY): cv.string,
