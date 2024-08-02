@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 _LOGGER = logging.getLogger(__name__)
 
 DOMAIN = 'hayoutubelivealert'
-SCAN_INTERVAL = datetime.timedelta(minutes=5)
+SCAN_INTERVAL = datetime.timedelta(minutes=30)  # 將更新間隔設為30分鐘
 
 CONF_API_KEY = 'api_key'
 CONF_CHANNEL_ID = 'channel_id'
@@ -84,13 +84,22 @@ class YouTubeSensor(Entity):
         }
 
     def update(self):
-        youtube = build('youtube', 'v3', developerKey=self._api_key)
-        request = youtube.search().list(part='snippet', channelId=self._channel_id, type='video', eventType='live')
-        response = request.execute()
+        try:
+            youtube = build('youtube', 'v3', developerKey=self._api_key)
+            request = youtube.search().list(part='snippet', channelId=self._channel_id, type='video', eventType='live')
+            response = request.execute()
 
-        if response['items']:
-            self._state = "Live"
-            self._live_url = f"https://www.youtube.com/watch?v={response['items'][0]['id']['videoId']}"
-        else:
-            self._state = "Offline"
+            _LOGGER.debug("YouTube API response: %s", response)  # 增加日誌以檢查 API 回應
+
+            if response['items']:
+                self._state = "Live"
+                self._live_url = f"https://www.youtube.com/watch?v={response['items'][0]['id']['videoId']}"
+                _LOGGER.info("Live stream found: %s", self._live_url)
+            else:
+                self._state = "Not Live"
+                self._live_url = None
+                _LOGGER.info("No live stream found.")
+        except Exception as e:
+            _LOGGER.error("Error fetching data from YouTube API: %s", e)
+            self._state = "Error"
             self._live_url = None
